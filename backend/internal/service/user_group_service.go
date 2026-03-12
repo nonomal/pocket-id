@@ -96,7 +96,10 @@ func (s *UserGroupService) Delete(ctx context.Context, id string) error {
 		return err
 	}
 
-	s.scimService.ScheduleSync()
+	if s.scimService != nil {
+		s.scimService.ScheduleSync()
+	}
+
 	return nil
 }
 
@@ -126,7 +129,10 @@ func (s *UserGroupService) createInternal(ctx context.Context, input dto.UserGro
 		return model.UserGroup{}, err
 	}
 
-	s.scimService.ScheduleSync()
+	if s.scimService != nil {
+		s.scimService.ScheduleSync()
+	}
+
 	return group, nil
 }
 
@@ -162,7 +168,7 @@ func (s *UserGroupService) updateInternal(ctx context.Context, id string, input 
 
 	group.Name = input.Name
 	group.FriendlyName = input.FriendlyName
-	group.UpdatedAt = utils.Ptr(datatype.DateTime(time.Now()))
+	group.UpdatedAt = new(datatype.DateTime(time.Now()))
 
 	err = tx.
 		WithContext(ctx).
@@ -175,7 +181,10 @@ func (s *UserGroupService) updateInternal(ctx context.Context, id string, input 
 		return model.UserGroup{}, err
 	}
 
-	s.scimService.ScheduleSync()
+	if s.scimService != nil {
+		s.scimService.ScheduleSync()
+	}
+
 	return group, nil
 }
 
@@ -228,7 +237,7 @@ func (s *UserGroupService) updateUsersInternal(ctx context.Context, id string, u
 	}
 
 	// Save the updated group
-	group.UpdatedAt = utils.Ptr(datatype.DateTime(time.Now()))
+	group.UpdatedAt = new(datatype.DateTime(time.Now()))
 
 	err = tx.
 		WithContext(ctx).
@@ -238,7 +247,10 @@ func (s *UserGroupService) updateUsersInternal(ctx context.Context, id string, u
 		return model.UserGroup{}, err
 	}
 
-	s.scimService.ScheduleSync()
+	if s.scimService != nil {
+		s.scimService.ScheduleSync()
+	}
+
 	return group, nil
 }
 
@@ -315,6 +327,9 @@ func (s *UserGroupService) UpdateAllowedOidcClient(ctx context.Context, id strin
 		return model.UserGroup{}, err
 	}
 
-	s.scimService.ScheduleSync()
+	if s.scimService != nil {
+		s.scimService.ScheduleSync()
+	}
+
 	return group, nil
 }
